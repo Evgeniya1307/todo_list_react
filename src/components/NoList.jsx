@@ -1,5 +1,7 @@
 import addNote from "../assets/addNote.svg";
 
+
+//изображение когда в списке нет ничего
 export const NoList = () => {
   return (
     <>
