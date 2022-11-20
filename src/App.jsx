@@ -2,21 +2,33 @@ import { Form } from "./components/Form";
 import { Header } from "./components/Header";
 import { List } from "./components/List";
 import { useEffect, useState } from "react";
+import {
+  collection,
+  query,
+  onSnapshot,
+  doc,
+} from "firebase/firestore";
+import { db } from "./firebase"; 
+
 
 function App() {
   const [tasks, setTasks] = useState([]);
   const [task, setTask] = useState({});
-  useEffect(() => {
-    const getTasksInLocalStorage = () => {
-      const tasksInLocalStorage =
-        JSON.parse(localStorage.getItem("tasks")) ?? [];
-      setTasks(tasksInLocalStorage);
-    };
-    getTasksInLocalStorage();
-  }, []);
-  useEffect(() => {
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-  }, [tasks]);
+ //получаю данные 
+ useEffect(()=>{
+  const q= query(collection(db,"tasks"));
+  const unsub= onSnapshot(q,(querySnapshot)=>{ //запрос
+    let tasksArray=[];//временный массив для задач
+    querySnapshot.forEach((doc)=>{
+      tasksArray.push({...doc.data(), id:doc.id});//каждое действие помещаю во временный массив
+    })
+    setTasks(tasksArray)
+  }) 
+  return()=> unsub()
+  },[]);
+
+
+
 
   const deleteTask = (id) => {
     const chooseTask = tasks.filter((task) => task.id !== id);
@@ -34,5 +46,3 @@ function App() {
 }
 
 export default App;
-
-//props are always from parents to children. no the other way

@@ -1,7 +1,8 @@
 import { Button } from "./Button";
 import { useState, useEffect } from "react";
 import { AlertError } from "./AlertError";
-
+import { db } from "../firebase";
+import {collection, addDoc} from "firebase/firestore";
 
 
 export const Form = ({ task, tasks, setTasks, setTask }) => {
@@ -24,12 +25,21 @@ export const Form = ({ task, tasks, setTasks, setTask }) => {
     return id;
   };
 
-  const handleSubmit = (e) => {
+
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    if ([title, message, date].includes("")) {
-      setError(true);
+    if ([title, message, date ].includes("")) {
+      await addDoc(collection(db, "tasks"),{ //фу-ия для добавления документа для хранения данных в базе данных
+        title,
+        completed:false, 
+     });
+     setTitle("");
+     setError(true)
       return;
     }
+
+
+
     setError(false);
     const taskObject = {
       title,
@@ -151,4 +161,4 @@ export const Form = ({ task, tasks, setTasks, setTask }) => {
       </div>
     </>
   );
-};
+            }
