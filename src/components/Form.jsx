@@ -74,7 +74,7 @@ export const Form = ({ task, tasks, setTasks, setTask }) => {
           <form onSubmit={handleSubmit}>
             {error && (
               <AlertError>
-                <p className="font-bold">Hey!</p>
+                <p className="font-bold">Привет!</p>
                 <p className="text-sm">
                 Сначала вы должны заполнить всю форму
                 </p>
